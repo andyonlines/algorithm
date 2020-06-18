@@ -1,5 +1,7 @@
 package LinkList;
 
+import java.util.Stack;
+
 public class SingleLinkListDemo {
     public static void main(String[] args) {
         HeroNode hero1 = new HeroNode(1, "宋江", "及时雨");
@@ -19,13 +21,17 @@ public class SingleLinkListDemo {
         list.addByOrder(hero2);
         list.addByOrder(hero4);
 
-        list.del(2);
+        // list.del(2);
 
         // HeroNode herotemp = new HeroNode(3, "andy", "帅哥");
         //
         // list.update(herotemp);
+        // System.out.println(list.getLength());
 
-        list.show();
+        //System.out.println(list.findLastIndexNode(1));
+        //list.reversetList();
+
+        list.reversePrint();
 
     }
 }
@@ -34,6 +40,99 @@ public class SingleLinkListDemo {
 class SingleLinkList{
     private HeroNode head = new HeroNode(0,"","");
 
+    /**
+     * 逆序打印链表
+     * 利用栈先进后出的特点,把链表从头到尾压栈
+     * 出栈的时候就是从尾到头
+     */
+    public void reversePrint(){
+        //空表
+        if (head.next == null)
+            return;
+
+        Stack<HeroNode> stack = new Stack<HeroNode>();
+
+        HeroNode temp = head.next;
+        while (temp != null){
+            stack.push(temp);
+            temp = temp.next;
+        }
+
+        while (stack.size() > 0){
+            System.out.println(stack.pop());
+        }
+    }
+
+    /**
+     * 链表翻转
+     */
+    public void reversetList(){
+        //如果链表为空或者是链表只有一个元素无需翻转
+        if (head.next == null || head.next.next == null)
+            return;
+
+        HeroNode tempHead = head.next;
+        HeroNode temp;
+        head.next = null;
+
+        while (tempHead != null){
+            temp = tempHead.next;
+            tempHead.next = head.next;
+            head.next = tempHead;
+            tempHead = temp;
+        }
+
+
+    }
+
+    /**
+     * 求出链表中倒数最后的第几个元素
+     * 思路:
+     * 先求出整个链表的长度length
+     * 然后用length-lastindex就得到第几个倒数元素的正序值
+     * 然后在遍历链表找到该元素,返回
+     * @param lastIndex
+     * @return
+     */
+    public HeroNode findLastIndexNode(int lastIndex){
+        if (head.next == null)
+            return null;
+        int length = getLength();
+        if (lastIndex < 0 || lastIndex > length)
+            return null;
+        HeroNode temp = head.next;
+        for (int i = 0;i < length - lastIndex;i++)
+            temp = temp.next;
+        return temp;
+    }
+
+    /**
+     * 获取头结点
+     * @return
+     */
+    public HeroNode getHead(){
+        return head;
+    }
+
+    /**
+     * 返回有效节点的数量(链表的大小,不包括头结点)
+     */
+    public  int getLength(){
+
+        HeroNode temp = head.next;
+        int length = 0;
+
+        while(temp != null){
+            length ++;
+            temp = temp.next;
+        }
+        return length;
+    }
+
+    /**
+     * 删除
+     * @param no
+     */
     public void del(int no){
 
         if (head.next == null){
